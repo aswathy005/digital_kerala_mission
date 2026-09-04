@@ -1,0 +1,89 @@
+@import "tailwindcss";
+
+@theme {
+  --color-primary-purple: #7C3AED;
+  --color-purple-dark: #6D28D9;
+  --color-lavender-soft: #F3E8FF;
+  --color-lavender-light: #FAF5FF;
+  --color-emerald-accent: #059669;
+  --color-emerald-soft: #ECFDF5;
+  --color-navy-dark: #0F172A;
+  --color-navy-deep: #1E1B4B;
+  --color-slate-body: #475569;
+  --color-chilli: #AE4429;
+
+  --font-serif: "Fraunces", Georgia, serif;
+  --font-sans: "IBM Plex Sans", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  --font-mono: "IBM Plex Mono", monospace;
+}
+
+@layer base {
+  html {
+    scroll-behavior: smooth;
+  }
+  
+  body {
+    background-color: #FFFFFF;
+    color: var(--color-navy-dark);
+    font-family: var(--font-sans);
+    overflow-x: hidden;
+  }
+
+  h1, h2, h3, h4, h5, h6 {
+    font-family: var(--font-sans);
+  }
+}
+
+/* Custom Visual Accents & Gradients */
+.text-purple-gradient {
+  background: linear-gradient(135deg, #7C3AED 0%, #A855F7 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+.bg-purple-gradient {
+  background: linear-gradient(135deg, #7C3AED 0%, #6D28D9 100%);
+}
+
+.bg-navy-gradient {
+  background: linear-gradient(135deg, #0F172A 0%, #1E1B4B 100%);
+}
+
+.bg-hero-lavender {
+  background: linear-gradient(180deg, #FAF5FF 0%, #FFFFFF 100%);
+}
+
+.shadow-purple-glow {
+  box-shadow: 0 10px 30px -5px rgba(124, 58, 237, 0.25);
+}
+
+.shadow-soft-card {
+  box-shadow: 0 4px 20px 0 rgba(15, 23, 42, 0.06);
+}
+
+/* Kerala Backwater Imagery Overlay */
+.kerala-hero-bg {
+  background: linear-gradient(180deg, rgba(15, 23, 42, 0.3) 0%, rgba(124, 58, 237, 0.4) 100%),
+              url('https://images.unsplash.com/photo-1602216056096-3b40cc0c9944?auto=format&fit=crop&w=1200&q=80') center/cover no-repeat;
+}
+
+.kerala-cta-bg {
+  background: linear-gradient(135deg, rgba(15, 23, 42, 0.85) 0%, rgba(109, 40, 217, 0.9) 100%),
+              url('https://images.unsplash.com/photo-1602216056096-3b40cc0c9944?auto=format&fit=crop&w=1200&q=80') center/cover no-repeat;
+}
+
+/* Custom Scrollbar */
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+::-webkit-scrollbar-track {
+  background: #F8FAFC;
+}
+::-webkit-scrollbar-thumb {
+  background: #CBD5E1;
+  border-radius: 4px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: #7C3AED;
+}
