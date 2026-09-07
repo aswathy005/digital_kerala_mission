@@ -1,7 +1,8 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import FormField from '../components/FormField';
 import Button from '../components/Button';
 import Toast from '../components/Toast';
+import { getAdminSiteContent, createAdminSiteContent, updateAdminSiteContent } from '../services/apiServices';
 
 const AdminSiteContent = () => {
   const [siteContent, setSiteContent] = useState({
@@ -13,11 +14,56 @@ const AdminSiteContent = () => {
   });
 
   const [toast, setToast] = useState(null);
+  const [contentIds, setContentIds] = useState({});
+  const [isLoading, setIsLoading] = useState(true);
 
-  const handleSave = (e) => {
+  useEffect(() => {
+    const loadSiteContent = async () => {
+      try {
+        const response = await getAdminSiteContent();
+        const records = response.data || [];
+        const values = {};
+        const ids = {};
+        records.forEach((record) => {
+          if (record.key in siteContent) {
+            values[record.key] = record.value;
+            ids[record.key] = record.id;
+          }
+        });
+        setSiteContent((current) => ({ ...current, ...values }));
+        setContentIds(ids);
+      } catch (err) {
+        setToast({ type: 'error', message: err.userMessage || 'Unable to load site content.' });
+      } finally {
+        setIsLoading(false);
+      }
+    };
+    loadSiteContent();
+  }, []);
+
+  const handleSave = async (e) => {
     e.preventDefault();
-    setToast({ type: 'success', message: 'Site configuration saved successfully!' });
+    try {
+      const sectionByKey = {
+        heroHeadline: 'hero',
+        heroSubtext: 'hero',
+        ctaBannerText: 'cta',
+        contactEmail: 'contact',
+        contactPhone: 'contact',
+      };
+      await Promise.all(Object.entries(siteContent).map(([key, value]) => {
+        const data = { section: sectionByKey[key], key, value, type: 'text' };
+        return contentIds[key]
+          ? updateAdminSiteContent(contentIds[key], data)
+          : createAdminSiteContent(data);
+      }));
+      setToast({ type: 'success', message: 'Site configuration saved successfully!' });
+    } catch (err) {
+      setToast({ type: 'error', message: err.userMessage || 'Unable to save site content.' });
+    }
   };
+
+  if (isLoading) return <div className="text-sm text-slate-500">Loading site content...</div>;
 
   return (
     <div className="space-y-6 max-w-2xl">

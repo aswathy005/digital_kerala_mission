@@ -90,7 +90,7 @@ const ContactSection = ({ defaultTab = 'business' }) => {
                   </div>
                   <div>
                     <strong className="block text-ivory font-semibold">WhatsApp & Helpline</strong>
-                    <span className="text-xs text-ivory/70">+91 484 290 1000 / +91 98470 00000</span>
+                    <span className="text-xs text-ivory/70">+91 8943141413  / +91 7907106605</span>
                   </div>
                 </div>
 

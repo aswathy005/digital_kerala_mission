@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { getAdminFranchiseApps } from '../services/apiServices';
+import { getAdminFranchiseApps, updateAdminFranchiseApp } from '../services/apiServices';
 import LoadingState from '../components/LoadingState';
 import Toast from '../components/Toast';
 import { Search } from 'lucide-react';
@@ -25,9 +25,14 @@ const AdminFranchiseApplications = () => {
     fetchApps();
   }, []);
 
-  const handleStatusChange = (id, newStatus) => {
-    setFranchiseApps(prev => prev.map(f => f.id === id ? { ...f, status: newStatus } : f));
-    setToast({ type: 'success', message: `Franchise Application status updated to ${newStatus}` });
+  const handleStatusChange = async (id, newStatus) => {
+    try {
+      await updateAdminFranchiseApp(id, newStatus);
+      setFranchiseApps(prev => prev.map(f => f.id === id ? { ...f, status: newStatus } : f));
+      setToast({ type: 'success', message: `Franchise Application status updated to ${newStatus}` });
+    } catch (err) {
+      setToast({ type: 'error', message: err.userMessage || 'Unable to update application status.' });
+    }
   };
 
   const filtered = franchiseApps.filter(f =>
@@ -102,9 +107,10 @@ const AdminFranchiseApplications = () => {
                       className="px-2 py-1 rounded-lg border border-slate-200 text-xs bg-white text-navy-dark cursor-pointer"
                     >
                       <option value="Under Review">Under Review</option>
-                      <option value="Interview Scheduled">Interview Scheduled</option>
-                      <option value="Approved">Approved</option>
-                      <option value="Rejected">Rejected</option>
+                      <option value="Contacted">Contacted</option>
+                      <option value="Qualified">Qualified</option>
+                      <option value="Converted">Converted</option>
+                      <option value="Closed">Closed</option>
                     </select>
                   </td>
                 </tr>

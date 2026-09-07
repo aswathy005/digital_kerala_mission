@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { getTestimonials } from '../services/apiServices';
+import { getAdminSuccessStories } from '../services/apiServices';
 import LoadingState from '../components/LoadingState';
 import Toast from '../components/Toast';
 import Button from '../components/Button';
@@ -13,7 +13,7 @@ const AdminSuccessStories = () => {
     const fetchStories = async () => {
       setIsLoading(true);
       try {
-        const res = await getTestimonials();
+        const res = await getAdminSuccessStories();
         if (res?.data) setTestimonials(res.data);
       } catch (err) {
         console.error(err);

@@ -110,17 +110,17 @@ const Footer = () => {
             <div className="space-y-2 text-xs font-sans text-slate-400">
               <div className="flex items-center gap-2">
                 <Phone className="w-3.5 h-3.5 text-primary-purple shrink-0" />
-                <span>+91 9061 88 77 55</span>
+                <span>+91 7907106605</span>
               </div>
 
               <div className="flex items-center gap-2">
                 <Mail className="w-3.5 h-3.5 text-primary-purple shrink-0" />
-                <span>hello@digitalkeralamission.com</span>
+                <span>info@dynexoit.com</span>
               </div>
 
               <div className="flex items-center gap-2">
                 <MapPin className="w-3.5 h-3.5 text-primary-purple shrink-0" />
-                <span>Kochi, Kerala, India</span>
+                <span>calicut, Kerala, India</span>
               </div>
             </div>
 

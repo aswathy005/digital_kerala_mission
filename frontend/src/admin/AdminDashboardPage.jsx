@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
-import { getAdminEnquiries, getAdminFranchiseApps, getAdminContactMessages, getResources } from '../services/apiServices';
+import { getAdminDashboard, getAdminResources } from '../services/apiServices';
 import LoadingState from '../components/LoadingState';
 import { Building2, Handshake, Mail, FileText, TrendingUp, Sparkles } from 'lucide-react';
 
@@ -15,15 +15,12 @@ const AdminDashboardPage = () => {
     const fetchData = async () => {
       setIsLoading(true);
       try {
-        const [enqRes, franRes, msgRes, resRes] = await Promise.all([
-          getAdminEnquiries(),
-          getAdminFranchiseApps(),
-          getAdminContactMessages(),
-          getResources('All')
-        ]);
-        if (enqRes?.data) setEnquiries(enqRes.data);
-        if (franRes?.data) setFranchiseApps(franRes.data);
-        if (msgRes?.data) setMessages(msgRes.data);
+        const [dashboardRes, resRes] = await Promise.all([getAdminDashboard(), getAdminResources()]);
+        if (dashboardRes?.data) {
+          setEnquiries((dashboardRes.data.recentEnquiries || []).map((item) => ({ ...item, id: item.id || item._id, category: item.category || item.businessCategory })));
+          setFranchiseApps((dashboardRes.data.recentFranchiseApplications || []).map((item) => ({ ...item, id: item.id || item._id, occupation: item.occupation || item.currentOccupation })));
+          setMessages((dashboardRes.data.recentMessages || []).map((item) => ({ ...item, id: item.id || item._id, submittedAt: item.submittedAt || item.createdAt })));
+        }
         if (resRes?.data) setResources(resRes.data);
       } catch (err) {
         console.error('Failed to load admin overview', err);

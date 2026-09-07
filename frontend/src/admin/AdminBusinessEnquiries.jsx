@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { getAdminEnquiries } from '../services/apiServices';
+import { getAdminEnquiries, updateAdminEnquiry } from '../services/apiServices';
 import LoadingState from '../components/LoadingState';
 import Toast from '../components/Toast';
 import { Search } from 'lucide-react';
@@ -25,9 +25,14 @@ const AdminBusinessEnquiries = () => {
     fetchEnquiries();
   }, []);
 
-  const handleStatusChange = (id, newStatus) => {
-    setEnquiries(prev => prev.map(e => e.id === id ? { ...e, status: newStatus } : e));
-    setToast({ type: 'success', message: `Enquiry status updated to ${newStatus}` });
+  const handleStatusChange = async (id, newStatus) => {
+    try {
+      await updateAdminEnquiry(id, newStatus);
+      setEnquiries(prev => prev.map(e => e.id === id ? { ...e, status: newStatus } : e));
+      setToast({ type: 'success', message: `Enquiry status updated to ${newStatus}` });
+    } catch (err) {
+      setToast({ type: 'error', message: err.userMessage || 'Unable to update enquiry status.' });
+    }
   };
 
   const filtered = enquiries.filter(e =>
@@ -108,8 +113,9 @@ const AdminBusinessEnquiries = () => {
                     >
                       <option value="New">New</option>
                       <option value="Contacted">Contacted</option>
-                      <option value="Consultation Scheduled">Scheduled</option>
-                      <option value="Onboarded">Onboarded</option>
+                      <option value="Qualified">Qualified</option>
+                      <option value="Converted">Converted</option>
+                      <option value="Closed">Closed</option>
                     </select>
                   </td>
                 </tr>

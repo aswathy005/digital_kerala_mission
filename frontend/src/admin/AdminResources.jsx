@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { getResources } from '../services/apiServices';
+import { getAdminResources } from '../services/apiServices';
 import LoadingState from '../components/LoadingState';
 import Button from '../components/Button';
 import Toast from '../components/Toast';
@@ -13,7 +13,7 @@ const AdminResources = () => {
     const fetchResourcesData = async () => {
       setIsLoading(true);
       try {
-        const res = await getResources('All');
+        const res = await getAdminResources();
         if (res?.data) setResources(res.data);
       } catch (err) {
         console.error(err);
