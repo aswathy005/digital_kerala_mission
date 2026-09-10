@@ -133,6 +133,7 @@ cp .env.example .env
 | :--- | :--- | :--- |
 | `PORT` | Express server port | `5000` |
 | `MONGODB_URI` | MongoDB connection URI string | `mongodb://localhost:27017/digital_kerala_db` |
+| `MONGODB_SERVER_SELECTION_TIMEOUT_MS` | MongoDB startup selection timeout in milliseconds | `10000` |
 | `JWT_SECRET` | Secret key for signing JWT tokens | `digital_kerala_jwt_secret_key_change_in_production` |
 | `CLIENT_URL` | Frontend React application URL | `http://localhost:5173` |
 | `SMTP_HOST` | Nodemailer SMTP server host | `smtp.gmail.com` |
@@ -143,6 +144,8 @@ cp .env.example .env
 | `ADMIN_NAME` | Default admin display name | `Digital Kerala Admin` |
 | `ADMIN_EMAIL` | Default admin login email | `admin@digitalkerala.org` |
 | `ADMIN_PASSWORD` | Default admin login password | `AdminPassword123!` |
+
+`ADMIN_EMAIL` and `ADMIN_PASSWORD` are required when the first admin is seeded. Use a strong, unique password in every environment; the application does not fall back to hardcoded admin credentials.
 
 ---
 
@@ -202,6 +205,8 @@ For production deployment with process managers (such as PM2):
 npm install -g pm2
 pm2 start src/server.js --name "digital-kerala-backend"
 ```
+
+For Vercel, set the project root to `backend`. The serverless entrypoint is `api/index.js`; configure the same environment variables in the Vercel project, including `MONGODB_URI`, `JWT_SECRET`, `CLIENT_URL`, `ADMIN_EMAIL`, and `ADMIN_PASSWORD`. Do not run `src/server.js` as a Vercel function.
 
 ---
 
