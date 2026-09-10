@@ -1,10 +1,12 @@
 import React, { useState, useEffect } from 'react';
 import { getAdminContactMessages } from '../services/apiServices';
 import LoadingState from '../components/LoadingState';
+import Toast from '../components/Toast';
 
 const AdminContactMessages = () => {
   const [messages, setMessages] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
+  const [error, setError] = useState('');
 
   useEffect(() => {
     const fetchMsgs = async () => {
@@ -13,7 +15,7 @@ const AdminContactMessages = () => {
         const res = await getAdminContactMessages();
         if (res?.data) setMessages(res.data);
       } catch (err) {
-        console.error(err);
+        setError(err.userMessage || 'Unable to load contact messages.');
       } finally {
         setIsLoading(false);
       }
@@ -25,13 +27,16 @@ const AdminContactMessages = () => {
 
   return (
     <div className="space-y-6">
+      <Toast message={error} type="error" onClose={() => setError('')} />
       <div className="border-b pb-4">
         <h1 className="text-2xl font-sans font-extrabold text-navy-dark">Contact Form Messages</h1>
         <p className="text-xs text-slate-body">Direct user messages from the Contact Us page.</p>
       </div>
 
       <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-        {messages.map(msg => (
+        {messages.length === 0 ? (
+          <p className="text-sm text-slate-body">No contact messages found.</p>
+        ) : messages.map(msg => (
           <div key={msg.id} className="bg-white rounded-3xl p-6 border border-purple-100 shadow-soft-card space-y-3">
             <div className="flex items-center justify-between border-b pb-2">
               <span className="font-mono text-xs text-primary-purple font-bold">{msg.id}</span>

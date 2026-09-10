@@ -29,7 +29,8 @@ apiClient.interceptors.response.use(
       error.response?.data?.message ||
       error.message ||
       'An unexpected network error occurred';
-    return Promise.reject({ ...error, userMessage: message });
+    error.userMessage = message;
+    return Promise.reject(error);
   }
 );
 

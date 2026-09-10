@@ -16,7 +16,7 @@ const AdminSuccessStories = () => {
         const res = await getAdminSuccessStories();
         if (res?.data) setTestimonials(res.data);
       } catch (err) {
-        console.error(err);
+        setToast({ type: 'error', message: err.userMessage || 'Unable to load success stories.' });
       } finally {
         setIsLoading(false);
       }

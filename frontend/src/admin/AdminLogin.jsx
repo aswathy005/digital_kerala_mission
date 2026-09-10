@@ -7,7 +7,7 @@ import { adminLogin } from '../services/apiServices';
 import { ShieldCheck, Lock, AlertCircle } from 'lucide-react';
 
 const AdminLogin = () => {
-  const [form, setForm] = useState({ username: 'admin@digitalkerala.in', password: '' });
+  const [form, setForm] = useState({ username: '', password: '' });
   const [error, setError] = useState('');
   const [isLoading, setIsLoading] = useState(false);
   const [toast, setToast] = useState(null);

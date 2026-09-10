@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { getAdminDashboard, getAdminResources } from '../services/apiServices';
 import LoadingState from '../components/LoadingState';
+import Toast from '../components/Toast';
 import { Building2, Handshake, Mail, FileText, TrendingUp, Sparkles } from 'lucide-react';
 
 const AdminDashboardPage = () => {
@@ -10,6 +11,13 @@ const AdminDashboardPage = () => {
   const [messages, setMessages] = useState([]);
   const [resources, setResources] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
+  const [error, setError] = useState('');
+  const [dashboardCounts, setDashboardCounts] = useState({
+    businessEnquiries: 0,
+    franchiseApplications: 0,
+    contactMessages: 0,
+    resources: 0,
+  });
 
   useEffect(() => {
     const fetchData = async () => {
@@ -17,13 +25,19 @@ const AdminDashboardPage = () => {
       try {
         const [dashboardRes, resRes] = await Promise.all([getAdminDashboard(), getAdminResources()]);
         if (dashboardRes?.data) {
+          setDashboardCounts({
+            businessEnquiries: dashboardRes.data.totalBusinessEnquiries || 0,
+            franchiseApplications: dashboardRes.data.totalFranchiseApplications || 0,
+            contactMessages: dashboardRes.data.totalContactMessages || 0,
+            resources: dashboardRes.data.totalResources || resRes?.data?.length || 0,
+          });
           setEnquiries((dashboardRes.data.recentEnquiries || []).map((item) => ({ ...item, id: item.id || item._id, category: item.category || item.businessCategory })));
           setFranchiseApps((dashboardRes.data.recentFranchiseApplications || []).map((item) => ({ ...item, id: item.id || item._id, occupation: item.occupation || item.currentOccupation })));
           setMessages((dashboardRes.data.recentMessages || []).map((item) => ({ ...item, id: item.id || item._id, submittedAt: item.submittedAt || item.createdAt })));
         }
         if (resRes?.data) setResources(resRes.data);
       } catch (err) {
-        console.error('Failed to load admin overview', err);
+        setError(err.userMessage || 'Unable to load the admin dashboard.');
       } finally {
         setIsLoading(false);
       }
@@ -35,6 +49,7 @@ const AdminDashboardPage = () => {
 
   return (
     <div className="space-y-8">
+      <Toast message={error} type="error" onClose={() => setError('')} />
       
       {/* Page Header */}
       <div className="flex items-center justify-between border-b pb-4">
@@ -58,7 +73,7 @@ const AdminDashboardPage = () => {
         <div className="bg-white rounded-2xl p-6 border border-purple-100 shadow-soft-card flex items-center justify-between">
           <div>
             <span className="text-xs font-mono font-bold text-slate-500 uppercase">Business Enquiries</span>
-            <h3 className="text-3xl font-sans font-extrabold text-navy-dark mt-1">{enquiries.length}</h3>
+            <h3 className="text-3xl font-sans font-extrabold text-navy-dark mt-1">{dashboardCounts.businessEnquiries}</h3>
             <span className="text-[11px] text-primary-purple font-semibold">Consultations Requested</span>
           </div>
           <div className="w-12 h-12 rounded-2xl bg-purple-100 text-primary-purple flex items-center justify-center">
@@ -69,7 +84,7 @@ const AdminDashboardPage = () => {
         <div className="bg-white rounded-2xl p-6 border border-purple-100 shadow-soft-card flex items-center justify-between">
           <div>
             <span className="text-xs font-mono font-bold text-slate-500 uppercase">Franchise Applications</span>
-            <h3 className="text-3xl font-sans font-extrabold text-navy-dark mt-1">{franchiseApps.length}</h3>
+            <h3 className="text-3xl font-sans font-extrabold text-navy-dark mt-1">{dashboardCounts.franchiseApplications}</h3>
             <span className="text-[11px] text-emerald-accent font-semibold">District Hub Applicants</span>
           </div>
           <div className="w-12 h-12 rounded-2xl bg-emerald-100 text-emerald-accent flex items-center justify-center">
@@ -80,7 +95,7 @@ const AdminDashboardPage = () => {
         <div className="bg-white rounded-2xl p-6 border border-purple-100 shadow-soft-card flex items-center justify-between">
           <div>
             <span className="text-xs font-mono font-bold text-slate-500 uppercase">Contact Messages</span>
-            <h3 className="text-3xl font-sans font-extrabold text-navy-dark mt-1">{messages.length}</h3>
+            <h3 className="text-3xl font-sans font-extrabold text-navy-dark mt-1">{dashboardCounts.contactMessages}</h3>
             <span className="text-[11px] text-slate-600 font-semibold">Direct Queries</span>
           </div>
           <div className="w-12 h-12 rounded-2xl bg-slate-100 text-slate-700 flex items-center justify-center">
@@ -91,7 +106,7 @@ const AdminDashboardPage = () => {
         <div className="bg-white rounded-2xl p-6 border border-purple-100 shadow-soft-card flex items-center justify-between">
           <div>
             <span className="text-xs font-mono font-bold text-slate-500 uppercase">Total Resources</span>
-            <h3 className="text-3xl font-sans font-extrabold text-navy-dark mt-1">{resources.length}</h3>
+            <h3 className="text-3xl font-sans font-extrabold text-navy-dark mt-1">{dashboardCounts.resources}</h3>
             <span className="text-[11px] text-primary-purple font-semibold">Published Content</span>
           </div>
           <div className="w-12 h-12 rounded-2xl bg-purple-100 text-primary-purple flex items-center justify-center">

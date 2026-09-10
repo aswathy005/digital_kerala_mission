@@ -17,7 +17,7 @@ const AdminFranchiseApplications = () => {
         const res = await getAdminFranchiseApps();
         if (res?.data) setFranchiseApps(res.data);
       } catch (err) {
-        console.error(err);
+        setToast({ type: 'error', message: err.userMessage || 'Unable to load franchise applications.' });
       } finally {
         setIsLoading(false);
       }
@@ -106,7 +106,7 @@ const AdminFranchiseApplications = () => {
                       onChange={(e) => handleStatusChange(f.id, e.target.value)}
                       className="px-2 py-1 rounded-lg border border-slate-200 text-xs bg-white text-navy-dark cursor-pointer"
                     >
-                      <option value="Under Review">Under Review</option>
+                      <option value="New">New</option>
                       <option value="Contacted">Contacted</option>
                       <option value="Qualified">Qualified</option>
                       <option value="Converted">Converted</option>

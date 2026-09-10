@@ -12,6 +12,9 @@ const normalizeRecord = (record) => ({
   experience: record.experience || record.relevantExperience,
   reason: record.reason || record.reasonForInterest,
   contactMethod: record.contactMethod || record.preferredContactMethod,
+  quote: record.quote || record.testimonial,
+  avatar: record.avatar || record.image,
+  role: record.role || record.businessName,
 });
 
 const normalizeListResponse = (response) => {

@@ -33,7 +33,7 @@ const AdminDashboard = () => {
   });
 
   // Login form state
-  const [loginForm, setLoginForm] = useState({ username: 'admin@digitalkerala.in', password: '' });
+  const [loginForm, setLoginForm] = useState({ username: '', password: '' });
   const [loginError, setLoginError] = useState('');
   const [loginLoading, setLoginLoading] = useState(false);
 
@@ -75,7 +75,7 @@ const AdminDashboard = () => {
       if (franRes?.data) setFranchiseApps(franRes.data);
       if (resRes?.data) setResources(resRes.data);
     } catch (err) {
-      console.error('Failed to fetch admin data', err);
+      setToast({ type: 'error', message: err.userMessage || 'Unable to load admin data.' });
     } finally {
       setLoadingData(false);
     }
@@ -494,7 +494,7 @@ const AdminDashboard = () => {
                               onChange={(e) => handleUpdateStatus(f.id, e.target.value, 'franchise')}
                               className="px-2 py-1 rounded border border-kasavu/30 text-xs bg-white text-ink cursor-pointer"
                             >
-                              <option value="Under Review">Under Review</option>
+                              <option value="New">New</option>
                               <option value="Interview Scheduled">Interview Scheduled</option>
                               <option value="Approved">Approved</option>
                               <option value="Rejected">Rejected</option>

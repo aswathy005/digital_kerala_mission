@@ -16,7 +16,7 @@ const AdminResources = () => {
         const res = await getAdminResources();
         if (res?.data) setResources(res.data);
       } catch (err) {
-        console.error(err);
+        setToast({ type: 'error', message: err.userMessage || 'Unable to load resources.' });
       } finally {
         setIsLoading(false);
       }

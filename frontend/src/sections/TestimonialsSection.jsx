@@ -1,15 +1,24 @@
 import React, { useState, useEffect } from 'react';
 import { Quote, Sparkles } from 'lucide-react';
 import { getTestimonials } from '../services/apiServices';
+import LoadingState from '../components/LoadingState';
 
 const TestimonialsSection = () => {
   const [testimonials, setTestimonials] = useState([]);
+  const [isLoading, setIsLoading] = useState(true);
+  const [error, setError] = useState('');
 
   useEffect(() => {
     const loadTestimonials = async () => {
-      const res = await getTestimonials();
-      if (res?.data) {
-        setTestimonials(res.data);
+      try {
+        const res = await getTestimonials();
+        if (Array.isArray(res?.data)) {
+          setTestimonials(res.data);
+        }
+      } catch (err) {
+        setError(err.userMessage || 'Unable to load success stories right now.');
+      } finally {
+        setIsLoading(false);
       }
     };
     loadTestimonials();
@@ -31,9 +40,15 @@ const TestimonialsSection = () => {
           </h2>
         </div>
 
-        {/* 3 Testimonial Cards */}
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-8 mb-10">
-          {testimonials.map((item) => (
+        {isLoading ? (
+          <LoadingState text="Loading success stories..." />
+        ) : error ? (
+          <p className="text-center text-sm text-slate-body py-12">{error}</p>
+        ) : testimonials.length === 0 ? (
+          <p className="text-center text-sm text-slate-body py-12">Success stories will appear here soon.</p>
+        ) : (
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-8 mb-10">
+            {testimonials.map((item) => (
             <div
               key={item.id}
               className="bg-purple-50/50 rounded-3xl p-8 border border-purple-100 shadow-soft-card flex flex-col justify-between hover:shadow-lg transition-all duration-300 relative group"
@@ -57,8 +72,9 @@ const TestimonialsSection = () => {
                 </div>
               </div>
             </div>
-          ))}
-        </div>
+            ))}
+          </div>
+        )}
 
         {/* Pagination Dots */}
         <div className="flex items-center justify-center gap-2">

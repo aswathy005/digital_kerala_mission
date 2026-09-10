@@ -20,17 +20,19 @@ const ResourcesSection = () => {
   const [activeCategory, setActiveCategory] = useState('All');
   const [resources, setResources] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [error, setError] = useState('');
 
   useEffect(() => {
     const fetchResourcesData = async () => {
       setLoading(true);
+      setError('');
       try {
         const response = await getResources(activeCategory);
         if (response?.data) {
           setResources(response.data);
         }
       } catch (err) {
-        console.error('Failed to load resources', err);
+        setError(err.userMessage || 'Unable to load resources right now.');
       } finally {
         setLoading(false);
       }
@@ -72,6 +74,8 @@ const ResourcesSection = () => {
         {/* Resource Cards Grid */}
         {loading ? (
           <LoadingState text="Fetching AI Engine Insights & Case Studies..." />
+        ) : error ? (
+          <div className="text-center py-12 text-ink-soft font-sans">{error}</div>
         ) : resources.length === 0 ? (
           <div className="text-center py-12 text-ink-soft font-sans">
             No resources found in this category.

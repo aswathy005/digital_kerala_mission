@@ -17,7 +17,7 @@ const AdminBusinessEnquiries = () => {
         const res = await getAdminEnquiries();
         if (res?.data) setEnquiries(res.data);
       } catch (err) {
-        console.error(err);
+        setToast({ type: 'error', message: err.userMessage || 'Unable to load business enquiries.' });
       } finally {
         setIsLoading(false);
       }
